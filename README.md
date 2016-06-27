@@ -1,4 +1,4 @@
-# Four in A Row - A Jquery HTML5 game by Mark van Etten
+# Four in A Row - A Jquery HTML5 game Example
 
 This little game show's how to create a Four in a Row game by working with Jquery, CSS3 and HTML5.
 
