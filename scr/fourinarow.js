@@ -16,6 +16,7 @@
 var table = {
 	tablearray:[],
 	currentplayer: 1,
+	isWinner:false,
 	winnersize: 4,
 	width : 8,
 	height : 8,
@@ -52,6 +53,12 @@ var table = {
 	add: function AddToTable(index){
 		var pos = index * this.height;
 		var max = pos + this.height;
+		
+		if (this.isWinner){
+			return false;
+		}
+		
+
 		for (var i = pos ; i < max; i++ )
 		{	
 			if (this.tablearray[i] == 0 && i < max){
@@ -62,9 +69,16 @@ var table = {
 				
 				this.check();
 				this.turn();
+				
+				if (this.tablearray.indexOf(0) == -1){
+					// It's a tie. No zero's left in the array.
+					this.animatetie();
+					return false;
+				}
 				return this.tablearray[i];
 			}
 		}
+		
 		return false;
 	},
 	
@@ -107,6 +121,7 @@ var table = {
 					if (score == this.currentplayer * this.winnersize){
 						//debug//console.log("Player "+ this.currentplayer +" wins on Horizontal position " + pos);
 						this.winner(winpositions);
+						this.isWinner = true;
 						return true;
 					}
 				}
@@ -131,6 +146,7 @@ var table = {
 					if (score == this.currentplayer * this.winnersize){
 						//debug//console.log("Player "+ this.currentplayer +" wins on Vertical position " + pos);
 						this.winner(winpositions);
+						this.isWinner = true;
 						return true;
 					}
 				}
@@ -157,6 +173,7 @@ var table = {
 					if (score == this.currentplayer * this.winnersize){
 						//debug//console.log("Player "+ this.currentplayer +" wins on Forward Diagonal position " + pos);
 						this.winner(winpositions);
+						this.isWinner = true;
 						return true;
 					}
 				}
@@ -183,6 +200,7 @@ var table = {
 					if (score == this.currentplayer * this.winnersize){
 						console.log("Player "+ this.currentplayer +" wins on Backward Diagonal position " + pos);
 						this.winner(winpositions);
+						this.isWinner = true;
 						return true;
 					}
 				}
@@ -229,6 +247,23 @@ var table = {
 	},
 	
 	/*
+	 * animatetie
+	 * Set the marginTop to 1300px for every div with id x and animate the marginTop to 1300px; 
+	 *
+	 * @param void
+	 * 
+	 * @return void
+	 */
+	animatetie: function Drop(){
+		$.each(this.tablearray, function( id, value ) {
+			$( "#"+id ).animate({ marginTop: "1300px"},2200);
+		});
+		
+		$("#messagebox").html("<a href='.'><p>It's a tie<p></a>");
+		$("#messagebox").toggle();
+	},
+	
+	/*
 	 * winner
 	 * Show the winner on the HTML page and show's the winning row.
 	 *
@@ -260,7 +295,6 @@ var table = {
 	 */
 	render: function RenderTable(){
 		
-		var parent;
 		var col = 0;
 		var table = "<table id='mainGame'>";
 		table += "<tr>";
@@ -282,7 +316,9 @@ var table = {
 			
 		}
 		
-		table += "<tr id='winnerrow' style='display:none'><td colspan='1'><div id='winner' class='blank'></td><td colspan='"+ (this.width - 1) +"'><p>Wins</p></td></tr>";
+		table += "<tr id='winnerrow' style='display:none'><td colspan='1'><div id='winner' class='blank'></td><td colspan='"+ (this.width - 1) +"'><a href='.'><p>Wins! Play again?<p></a></td></tr>";
+		table += "<div id='messagebox' class='overlay' style='display:none'><div id='message'></div></div>";
+		table += "</table>";
 		if($("#fourinarow").length){
 			$("#fourinarow").html(table);
 		}

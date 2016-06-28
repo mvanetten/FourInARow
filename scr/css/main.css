@@ -40,3 +40,21 @@ p{
 	font-size:-webkit-xxx-large;
 	font-family: monospace;
 }
+
+a:link {
+    text-decoration: none;
+	font-size:-webkit-xxx-large;
+	font-family: monospace;
+}
+
+.overlay {
+    position:absolute;
+	padding: 20px;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color:rgba(0, 0, 0, 0.85);
+    z-index:9999;
+    color:white;
+}
