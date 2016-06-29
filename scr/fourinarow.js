@@ -18,8 +18,9 @@ var table = {
 	currentplayer: 1,
 	isWinner:false,
 	winnersize: 4,
-	width : 8,
-	height : 8,
+	width : 7,
+	height : 6,
+	computer : true,
 	
 	
 	/*
@@ -57,7 +58,6 @@ var table = {
 		if (this.isWinner){
 			return false;
 		}
-		
 
 		for (var i = pos ; i < max; i++ )
 		{	
@@ -69,6 +69,8 @@ var table = {
 				
 				this.check();
 				this.turn();
+				
+
 				
 				if (this.tablearray.indexOf(0) == -1){
 					// It's a tie. No zero's left in the array.
@@ -96,6 +98,13 @@ var table = {
 		this.render();
 	},
 	
+	ai: function Computer(){
+		if (this.computer){
+				this.add(Math.floor((Math.random() * this.width));
+				// Need some work. What happens if this function returns false?
+			}
+		};
+	},
 	
 	/*
 	 * check
@@ -226,6 +235,7 @@ var table = {
 		if (this.currentplayer == 1){
 			this.currentplayer = 2;
 			$(".hover1").attr("class", "hover2");
+			this.ai();
 		}
 		else{
 			this.currentplayer = 1;
@@ -333,4 +343,6 @@ var table = {
 $( document ).ready(function() {
     table.newgame();
 });
+
+	
 
