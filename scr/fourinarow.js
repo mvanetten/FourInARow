@@ -21,6 +21,7 @@ var table = {
 	width : 7,
 	height : 6,
 	computer : true,
+	difficulty: 1, //1 is easy. Increase the number to increase depth scans.
 	
 	
 	/*
@@ -33,14 +34,12 @@ var table = {
 	 */
 	create: function CreateTable(){
 		this.tablearray = [];
-		for (var i = 0; i < (this.width * this.height); i++)
-		{
+		for (var i = 0; i < (this.width * this.height); i++){
 			this.tablearray[i] = 0;
-			
-		}
-		
-		//debug//console.log(this.tablearray);
-		console.log("Four in Row is ready");
+		};
+		if (this.tablearray.length == (this.width * this.height)){
+			console.log("Four in a Row is ready");
+		};		
 	},
 	
 	/*
@@ -64,13 +63,11 @@ var table = {
 			if (this.tablearray[i] == 0 && i < max){
 				//debug//console.log("Free Spot on : " + i);
 				this.tablearray[i] = this.currentplayer;
+				
 				$("#"+i).attr("class", "player" + this.currentplayer);
 				this.animate(i);
-				
 				this.check();
 				this.turn();
-				
-
 				
 				if (this.tablearray.indexOf(0) == -1){
 					// It's a tie. No zero's left in the array.
@@ -80,7 +77,6 @@ var table = {
 				return this.tablearray[i];
 			}
 		}
-		
 		return false;
 	},
 	
@@ -94,15 +90,13 @@ var table = {
 	 */
 	newgame: function NewGame(){
 		this.create();
-		$("#fourinarow").html("test");
 		this.render();
 	},
 	
 	ai: function Computer(){
 		if (this.computer){
-				this.add(Math.floor((Math.random() * this.width));
-				// Need some work. What happens if this function returns false?
-			}
+			this.add(Math.floor((Math.random() * this.width)))
+			// Need some work. What happens if this function returns false?
 		};
 	},
 	
@@ -114,7 +108,7 @@ var table = {
 	 * 
 	 * @return true if winner or false if not.
 	 */
-	check: function CheckWinner(){
+	check: function CheckWinner(table = this.tablearray, checkonly = false){
 		var score = 0;
 		var winpositions = [];
 		
@@ -123,14 +117,16 @@ var table = {
 			for (var col = 0; col <= this.width - this.winnersize; col++){
 				for (var pos = (col * this.height) + row; pos < (col * this.height) + (this.height * this.winnersize) + row ; pos = pos + this.height){
 					//debug//console.log("Checking Hor : " + col + " On row : " + row + " Array index : " + pos);
-					if (this.tablearray[pos] == this.currentplayer){
+					if (table[pos] == this.currentplayer){
 						score = score + this.currentplayer;
 						winpositions.push(pos);
 					}
 					if (score == this.currentplayer * this.winnersize){
 						//debug//console.log("Player "+ this.currentplayer +" wins on Horizontal position " + pos);
-						this.winner(winpositions);
-						this.isWinner = true;
+						if (checkonly == false){
+							this.winner(winpositions);
+							this.isWinner = true;	
+						}
 						return true;
 					}
 				}
@@ -148,14 +144,16 @@ var table = {
 			for (var row = 0; row <= this.height - this.winnersize; row++){
 				for (var pos = (col * this.height) + row; pos < (col * this.height) + (this.winnersize) + row ; pos++){
 					//debug//console.log("Checking Ver : " + col + " On row : " + row + " Array index : " + pos);
-					if (this.tablearray[pos] == this.currentplayer){
+					if (table[pos] == this.currentplayer){
 						score = score + this.currentplayer;
 						winpositions.push(pos);
 					}
 					if (score == this.currentplayer * this.winnersize){
 						//debug//console.log("Player "+ this.currentplayer +" wins on Vertical position " + pos);
-						this.winner(winpositions);
-						this.isWinner = true;
+						if (checkonly == false){
+							this.winner(winpositions);
+							this.isWinner = true;	
+						}
 						return true;
 					}
 				}
@@ -175,14 +173,16 @@ var table = {
 			for (var col = 0; col <= this.width - this.winnersize; col++){
 				for (pos = col * this.height + row; pos <= (col * this.height) + (this.height + 1) * (this.winnersize - 1) + row ; pos = pos + this.height + 1){
 					//debug//console.log("Checking diag forward: " + col + " on row : " + row + " array index : " + pos);
-					if (this.tablearray[pos] == this.currentplayer){
+					if (table[pos] == this.currentplayer){
 						score = score + this.currentplayer;
 						winpositions.push(pos);
 					}
 					if (score == this.currentplayer * this.winnersize){
 						//debug//console.log("Player "+ this.currentplayer +" wins on Forward Diagonal position " + pos);
-						this.winner(winpositions);
-						this.isWinner = true;
+						if (checkonly == false){
+							this.winner(winpositions);
+							this.isWinner = true;	
+						}
 						return true;
 					}
 				}
@@ -201,15 +201,17 @@ var table = {
 		for (var row = this.winnersize - 1; row <= this.height; row++){
 			for (var col = 0; col <= this.width - this.winnersize; col++){
 				for (pos = (col * this.height) + row; pos <= ((this.height - 1) * (this.winnersize - 1)) + (col * this.height) + row; pos = pos + (this.height -1)){
-					console.log("Checking diag Backward: " + col + " on row : " + row + " array index : " + pos);
-					if (this.tablearray[pos] == this.currentplayer){
+					//console.log("Checking diag Backward: " + col + " on row : " + row + " array index : " + pos);
+					if (table[pos] == this.currentplayer){
 						score = score + this.currentplayer;
 						winpositions.push(pos);
 					}
 					if (score == this.currentplayer * this.winnersize){
-						console.log("Player "+ this.currentplayer +" wins on Backward Diagonal position " + pos);
-						this.winner(winpositions);
-						this.isWinner = true;
+						//console.log("Player "+ this.currentplayer +" wins on Backward Diagonal position " + pos);
+						if (checkonly == false){
+							this.winner(winpositions);
+							this.isWinner = true;	
+						}
 						return true;
 					}
 				}
@@ -309,7 +311,7 @@ var table = {
 		var table = "<table id='mainGame'>";
 		table += "<tr>";
 		for (var col = 0; col < this.width; col++){
-			table += "<td onclick='table.add("+col+")' class='hover1'></td>";
+			table += "<td onclick='table.add("+col+")'><div class='hover1'></div></td>";
 		}
 		
 		table += "<tr/>";
@@ -319,14 +321,14 @@ var table = {
 				if (col >= this.width){
 					col = 0;
 				}
-				table += "<td><div class='blank' id='"+pos+"'></div></td>";
+				table += "<td><div onclick='table.add("+col+")' class='blank' id='"+pos+"'></div></td>";
 				col++;
 			}
 			table += "</tr>";
 			
 		}
 		
-		table += "<tr id='winnerrow' style='display:none'><td colspan='1'><div id='winner' class='blank'></td><td colspan='"+ (this.width - 1) +"'><a href='.'><p>Wins! Play again?<p></a></td></tr>";
+		table += "<tr id='winnerrow' style='display:none'><td colspan='1'><div id='winner' class='blank'></td><td colspan='"+ (this.width - 1) +"'><a href='.'><p>Wins! Again?<p></a></td></tr>";
 		table += "<div id='messagebox' class='overlay' style='display:none'><div id='message'></div></div>";
 		table += "</table>";
 		if($("#fourinarow").length){
